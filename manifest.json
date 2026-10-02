@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "Correu Clàssic",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "__MSG_extDescription__",
   "default_locale": "ca",
   "icons": {
@@ -31,7 +31,7 @@
         "*://outlook.cloud.microsoft/*"
       ],
       "css": ["content/theme.css"],
-      "js": ["content/content.js"],
+      "js": ["content/actions.js", "content/toolbars.js", "content/content.js"],
       "run_at": "document_start"
     }
   ],

@@ -1,6 +1,6 @@
 'use strict';
 
-const DEFAULTS = { enabled: true, theme: 'auto', zebra: false };
+const DEFAULTS = { enabled: true, theme: 'auto', zebra: false, toolbars: true, hideRibbon: false };
 
 for (const el of document.querySelectorAll('[data-i18n]')) {
   const text = chrome.i18n.getMessage(el.dataset.i18n);
@@ -9,18 +9,27 @@ for (const el of document.querySelectorAll('[data-i18n]')) {
 document.documentElement.lang = chrome.i18n.getUILanguage().split('-')[0];
 document.getElementById('version').textContent = 'v' + chrome.runtime.getManifest().version;
 
-const enabled = document.getElementById('enabled');
-const zebra = document.getElementById('zebra');
+const checkboxes = ['enabled', 'zebra', 'toolbars', 'hideRibbon'].map((id) => document.getElementById(id));
 const themeInputs = document.querySelectorAll('input[name="theme"]');
 
 chrome.storage.sync.get(DEFAULTS, (config) => {
-  enabled.checked = config.enabled;
-  zebra.checked = config.zebra;
+  for (const box of checkboxes) box.checked = config[box.id];
+  syncDependent();
   for (const input of themeInputs) input.checked = input.value === config.theme;
 });
 
-enabled.addEventListener('change', () => chrome.storage.sync.set({ enabled: enabled.checked }));
-zebra.addEventListener('change', () => chrome.storage.sync.set({ zebra: zebra.checked }));
+// «Amaga la cinta» només té sentit amb les barres pròpies actives
+function syncDependent() {
+  const hideRibbon = document.getElementById('hideRibbon');
+  hideRibbon.disabled = !document.getElementById('toolbars').checked;
+}
+
+for (const box of checkboxes) {
+  box.addEventListener('change', () => {
+    chrome.storage.sync.set({ [box.id]: box.checked });
+    syncDependent();
+  });
+}
 for (const input of themeInputs) {
   input.addEventListener('change', () => chrome.storage.sync.set({ theme: input.value }));
 }

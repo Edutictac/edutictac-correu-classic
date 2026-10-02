@@ -4,8 +4,9 @@ Extensió per a navegador que vist **Outlook web** amb l'aspecte d'un client de
 correu d'escriptori clàssic (tres panells, llista compacta en forma de taula,
 barres d'eines planes), amb la imatge de la **Comunitat EduTicTac**.
 
-És un projecte per a divertir-se: no afig funcions a Outlook ni llig el correu,
-només canvia com es veu.
+És un projecte per a divertir-se: no llig el correu ni parla amb cap servidor.
+Canvia com es veu Outlook i hi afig barres d'eines que premen els botons
+d'Outlook de sempre.
 
 | Tema clar | Tema fosc |
 |---|---|
@@ -21,8 +22,18 @@ només canvia com es veu.
 - Panell de carpetes gris, selecció plena, llista amb separadors fins i
   capçaleres de columna de taula, opció de files alternes.
 - Marca EduTicTac a la barra superior.
-- Diagnòstic al popup: indica quins elements d'Outlook ha reconegut, per a
-  ajustar la pell quan Microsoft canvia l'estructura.
+- **Barres d'eines clàssiques** (des de la v0.2):
+  - Barra unificada al costat de la marca: *Rep*, *Redacta*, *Llibreta
+    d'adreces*, *Calendari* i *Filtre ràpid*.
+  - Barra d'accions dalt del missatge obert: *Respon*, *Respon a tots*,
+    *Reenvia*, *Arxiva*, *Brossa* i *Suprimeix*.
+  - Cada botó busca el botó real d'Outlook (per identificador o per etiqueta
+    en valencià, castellà o anglés) i el prem. Si no el troba, fa servir la
+    drecera de teclat d'Outlook; si tampoc n'hi ha, avisa.
+  - Opció per a amagar la cinta d'Outlook quan les barres pròpies basten.
+- Diagnòstic al popup: indica quins elements d'Outlook ha reconegut i com
+  es resoldria cada botó de les barres, per a ajustar-ho quan Microsoft
+  canvia l'estructura.
 
 Funciona a `outlook.office.com`, `outlook.office365.com`,
 `outlook.cloud.microsoft` i `outlook.live.com`.
@@ -58,6 +69,10 @@ recarregar. Els selectors fan servir atributs estables (`role`, `id`,
 `aria-*`) i no les classes generades d'Outlook, que canvien a cada
 desplegament. Les files de la llista no canvien d'alçada perquè la llista és
 virtualitzada.
+
+Les barres d'eines (`content/toolbars.js`) no implementen cap acció pròpia:
+`content/actions.js` localitza el botó equivalent d'Outlook i en simula el
+clic, de manera que Outlook continua fent tota la feina.
 
 ## Marques
 

@@ -1,10 +1,11 @@
 // EduTicTac Correu Clàssic — script de contingut.
-// Només posa classes a <html> segons la configuració, injecta la marca a la
-// barra superior i respon al diagnòstic del popup. Tot l'aspecte és CSS.
+// Posa classes a <html> segons la configuració, injecta la marca i les
+// barres d'eines (toolbars.js) i respon al diagnòstic del popup.
+// L'aspecte és tot CSS.
 (() => {
   'use strict';
 
-  const DEFAULTS = { enabled: true, theme: 'auto', zebra: false };
+  const DEFAULTS = { enabled: true, theme: 'auto', zebra: false, toolbars: true, hideRibbon: false };
   const root = document.documentElement;
   const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
   let config = { ...DEFAULTS };
@@ -15,7 +16,8 @@
     header: '#O365_NavHeader, #o365header, div[role="banner"]',
     search: '#topSearchInput, div[role="search"], #searchBoxId',
     leftRail: '#LeftRail, div[data-automation-id="leftRail"]',
-    toolbar: 'div[role="toolbar"]',
+    toolbar: 'div[role="toolbar"]:not(.ett-toolbar):not(.ett-msgbar)',
+    ribbon: '#RibbonRoot, div[data-automation-id="ribbon"], div[role="region"][aria-label="Ribbon" i], div[role="region"][aria-label*="cinta" i]',
     folderTree: 'div[role="tree"], #folderPane, div[data-automation-id="folderPane"]',
     messageList: 'div#MailList, div#MessageList, div[data-automation-id="messageListContainer"], div[role="listbox"]',
     messageRow: 'div[role="listbox"] [role="option"]',
@@ -32,12 +34,18 @@
   function apply() {
     root.classList.toggle('ett-classic', config.enabled);
     root.classList.toggle('ett-zebra', config.enabled && config.zebra);
+    root.classList.toggle('ett-hide-ribbon', config.enabled && config.toolbars && config.hideRibbon);
     if (config.enabled) {
       root.setAttribute('data-ett-theme', resolveTheme());
-      ensureBrand();
     } else {
       root.removeAttribute('data-ett-theme');
     }
+    refresh();
+  }
+
+  function refresh() {
+    ensureBrand();
+    globalThis.ettToolbars.ensure(config.enabled && config.toolbars);
   }
 
   // --- Marca a la barra superior -------------------------------------------
@@ -82,7 +90,7 @@
     pending = true;
     requestAnimationFrame(() => {
       pending = false;
-      ensureBrand();
+      refresh();
     });
   });
 
@@ -98,7 +106,12 @@
       enabled: config.enabled,
       theme: resolveTheme(),
       brand: Boolean(document.querySelector('.ett-brand')),
-      found
+      toolbars: {
+        main: Boolean(document.querySelector('.ett-toolbar')),
+        message: Boolean(document.querySelector('.ett-msgbar'))
+      },
+      found,
+      actions: globalThis.ettActions.resolveAll()
     };
   }
 

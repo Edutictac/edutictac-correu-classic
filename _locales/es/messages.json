@@ -1,14 +1,86 @@
 {
-  "extName": { "message": "EduTicTac Correu Clàssic" },
-  "extDescription": { "message": "Piel de estilo cliente de correo de escritorio clásico para Outlook web, con la imagen de la Comunidad EduTicTac." },
-  "popupEnabled": { "message": "Aspecto clásico activo" },
-  "popupTheme": { "message": "Tema" },
-  "themeAuto": { "message": "Automático" },
-  "themeLight": { "message": "Claro" },
-  "themeDark": { "message": "Oscuro" },
-  "popupZebra": { "message": "Filas alternas en la lista" },
-  "popupDiagnose": { "message": "Diagnóstico" },
-  "popupNoOutlook": { "message": "Abre Outlook web en esta pestaña para ver el diagnóstico." },
-  "popupTip": { "message": "Consejo: en Outlook, pon el panel de lectura abajo y la lista en una sola línea (Configuración › Diseño)." },
-  "brandLabel": { "message": "Correo" }
+  "extName": {
+    "message": "EduTicTac Correu Clàssic"
+  },
+  "extDescription": {
+    "message": "Piel de estilo cliente de correo de escritorio clásico para Outlook web, con la imagen de la Comunidad EduTicTac."
+  },
+  "popupEnabled": {
+    "message": "Aspecto clásico activo"
+  },
+  "popupTheme": {
+    "message": "Tema"
+  },
+  "themeAuto": {
+    "message": "Automático"
+  },
+  "themeLight": {
+    "message": "Claro"
+  },
+  "themeDark": {
+    "message": "Oscuro"
+  },
+  "popupZebra": {
+    "message": "Filas alternas en la lista"
+  },
+  "popupDiagnose": {
+    "message": "Diagnóstico"
+  },
+  "popupNoOutlook": {
+    "message": "Abre Outlook web en esta pestaña para ver el diagnóstico."
+  },
+  "popupTip": {
+    "message": "Consejo: en Outlook, pon el panel de lectura abajo y la lista en una sola línea (Configuración › Diseño)."
+  },
+  "brandLabel": {
+    "message": "Correo"
+  },
+  "tbGetMessages": {
+    "message": "Recibir"
+  },
+  "tbWrite": {
+    "message": "Redactar"
+  },
+  "tbAddressBook": {
+    "message": "Libreta de direcciones"
+  },
+  "tbCalendar": {
+    "message": "Calendario"
+  },
+  "tbQuickFilter": {
+    "message": "Filtro rápido"
+  },
+  "tbReply": {
+    "message": "Responder"
+  },
+  "tbReplyAll": {
+    "message": "Responder a todos"
+  },
+  "tbForward": {
+    "message": "Reenviar"
+  },
+  "tbArchive": {
+    "message": "Archivar"
+  },
+  "tbJunk": {
+    "message": "No deseado"
+  },
+  "tbDelete": {
+    "message": "Eliminar"
+  },
+  "tbMainLabel": {
+    "message": "Barra de herramientas EduTicTac"
+  },
+  "tbMessageLabel": {
+    "message": "Acciones del mensaje"
+  },
+  "tbNotFound": {
+    "message": "No he encontrado el botón de Outlook para «$1». Pruébalo desde la cinta de Outlook."
+  },
+  "popupToolbars": {
+    "message": "Barras de herramientas clásicas"
+  },
+  "popupHideRibbon": {
+    "message": "Ocultar la cinta de Outlook"
+  }
 }

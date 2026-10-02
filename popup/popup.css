@@ -147,3 +147,12 @@ footer {
 }
 
 footer a { color: var(--brand); }
+
+.row.sub {
+  padding-left: 14px;
+  color: var(--muted);
+}
+
+.row.sub:has(input:disabled) {
+  opacity: .5;
+}
