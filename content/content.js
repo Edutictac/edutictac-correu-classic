@@ -148,6 +148,7 @@
       url: location.host + location.pathname,
       enabled: config.enabled,
       theme: resolveTheme(),
+      config,
       brand: Boolean(document.querySelector('.ett-brand')),
       header: findHeader()?.via || 'NO TROBADA',
       searchAncestry: document.querySelector('.ett-brand') ? undefined : searchAncestry(),

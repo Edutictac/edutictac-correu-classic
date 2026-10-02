@@ -439,7 +439,7 @@ html.ett-classic .ett-btn {
   border: 1px solid transparent;
   border-radius: 4px;
   background: transparent;
-  color: var(--ett-text);
+  color: var(--ett-text) !important;
   font: inherit;
   cursor: pointer;
   white-space: nowrap;
@@ -467,13 +467,13 @@ html.ett-classic .ett-btn:active {
 
 /* «Redacta» destaca, com el botó principal */
 html.ett-classic .ett-toolbar .ett-btn-write {
-  background: var(--ett-brand);
-  color: #fff;
+  background: var(--ett-brand) !important;
+  color: #fff !important;
   margin-right: 4px;
 }
 
 html.ett-classic .ett-toolbar .ett-btn-write:hover {
-  background: var(--ett-brand-hover);
+  background: var(--ett-brand-hover) !important;
   border-color: transparent;
 }
 
@@ -547,12 +547,21 @@ html.ett-classic .ett-toast.ett-toast-visible {
   transform: translate(-50%, 0);
 }
 
-/* Opcional: amaga la cinta d'Outlook quan les barres pròpies la substitueixen */
+/* Opcional: amaga la cinta d'Outlook quan les barres pròpies la substitueixen.
+   No es pot fer amb display: none, perquè les barres premen els botons de
+   la cinta i un botó sense mida no es pot prémer. La traiem del flux i de
+   la vista, però conserva la mida. */
 html.ett-classic.ett-hide-ribbon #RibbonRoot,
 html.ett-classic.ett-hide-ribbon div[data-automation-id="ribbon"],
 html.ett-classic.ett-hide-ribbon div[role="region"][aria-label="Ribbon" i],
 html.ett-classic.ett-hide-ribbon div[role="region"][aria-label*="cinta" i] {
-  display: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  transform: translateY(-200%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 html:not(.ett-classic) .ett-toolbar,

@@ -160,9 +160,11 @@
   function inventory() {
     const bars = 'div[role="toolbar"], #RibbonRoot, div[data-automation-id="ribbon"], div[role="region"][aria-label], [role="tablist"]';
     const seen = new Set();
-    for (const el of candidates(bars)) {
+    const selector = 'button, [role="button"], [role="menuitem"], [role="tab"]';
+    const all = [...document.querySelectorAll(bars)].flatMap((r) => [...r.querySelectorAll(selector)]);
+    for (const el of all.filter((b) => !b.closest(OWN))) {
       const id = el.dataset.automationId ? ` [${el.dataset.automationId}]` : '';
-      const label = labelOf(el).slice(0, 60);
+      const label = labelOf(el).slice(0, 60) + (isUsable(el) ? '' : ' (amagat)');
       if (label || id) seen.add(label + id);
       if (seen.size >= 80) break;
     }
