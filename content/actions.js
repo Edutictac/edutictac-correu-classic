@@ -32,7 +32,9 @@
     },
     quickFilter: {
       exact: ['filtre', 'filtra', 'filtrar', 'filtro', 'filter'],
-      prefix: ['filtr', 'filter', 'ordenar y filtrar', 'ordena i filtra', 'sort']
+      // Si no hi ha botó «Filtrar» (llista en una línia amb columnes), el
+      // menú «Ordenado: …» de dalt de la llista també porta els filtres.
+      prefix: ['filtr', 'filter', 'ordenar y filtrar', 'ordena i filtra', 'ordenado', 'ordenat', 'sort']
     },
     reply: {
       ids: ['reply'],
@@ -80,6 +82,12 @@
     if (el.getAttribute('aria-disabled') === 'true' || el.disabled) return false;
     const rect = el.getBoundingClientRect();
     return rect.width > 0 && rect.height > 0;
+  }
+
+  // Per al diagnòstic: per què un botó no es pot prémer.
+  function state(el) {
+    if (el.getAttribute('aria-disabled') === 'true' || el.disabled) return ' (desactivat)';
+    return isUsable(el) ? '' : ' (amagat)';
   }
 
   function candidates(scope) {
@@ -196,13 +204,13 @@
     const all = [...document.querySelectorAll(bars)].flatMap((r) => [...r.querySelectorAll(selector)]);
     for (const el of all.filter((b) => !b.closest(OWN))) {
       const id = el.dataset.automationId ? ` [${el.dataset.automationId}]` : '';
-      const label = labelOf(el).slice(0, 60) + (isUsable(el) ? '' : ' (amagat)');
+      const label = labelOf(el).slice(0, 60) + state(el);
       if (label || id) seen.add(label + id);
       if (seen.size >= 80) break;
     }
     for (const el of document.querySelectorAll(selector)) {
       const label = labelOf(el);
-      if (!el.closest(OWN) && /filt|orden|sort/.test(label)) seen.add(`${label.slice(0, 60)} (llista)${isUsable(el) ? '' : ' (amagat)'}`);
+      if (!el.closest(OWN) && /filt|orden|sort/.test(label)) seen.add(`${label.slice(0, 60)} (llista)${state(el)}`);
     }
     return [...seen];
   }
