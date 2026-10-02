@@ -127,11 +127,40 @@
     return true;
   }
 
-  function run(name) {
+  // Molts botons (Correo nuevo, Eliminar, Archivar…) només existeixen quan
+  // la cinta està a la pestanya Inici. Si estem en una altra (per exemple
+  // «Mensaje» mentre hi ha un esborrany obert), hi tornem.
+  const HOME_TABS = ['inici', 'inicio', 'home'];
+
+  function homeTab() {
+    return [...document.querySelectorAll('[role="tab"]')]
+      .filter((el) => !el.closest(OWN))
+      .find((el) => HOME_TABS.some((t) => labelOf(el).startsWith(t)));
+  }
+
+  function waitFor(def, timeout = 800) {
+    return new Promise((resolve) => {
+      const start = performance.now();
+      (function poll() {
+        const hit = findButton(def);
+        if (hit || performance.now() - start > timeout) resolve(hit);
+        else setTimeout(poll, 50);
+      })();
+    });
+  }
+
+  async function run(name) {
     const def = ACTIONS[name];
     if (!def) return false;
     if (def.run) return def.run();
-    const hit = findButton(def);
+    let hit = findButton(def);
+    if (!hit) {
+      const tab = homeTab();
+      if (tab && tab.getAttribute('aria-selected') !== 'true') {
+        tab.click();
+        hit = await waitFor(def);
+      }
+    }
     if (hit) {
       hit.el.click();
       return true;
@@ -150,7 +179,9 @@
     for (const [name, def] of Object.entries(ACTIONS)) {
       if (def.run) { out[name] = 'pròpia'; continue; }
       const hit = findButton(def);
-      out[name] = hit ? hit.via : def.key ? 'drecera de teclat' : def.url ? 'URL' : 'NO TROBADA';
+      const tab = homeTab();
+      const viaHome = tab && tab.getAttribute('aria-selected') !== 'true' ? 'pestanya Inici, després ' : '';
+      out[name] = hit ? hit.via : viaHome + (def.key ? 'drecera de teclat' : def.url ? 'URL' : 'NO TROBADA');
     }
     return out;
   }

@@ -59,10 +59,10 @@
     const text = document.createElement('span');
     text.textContent = label;
     btn.append(text);
-    btn.addEventListener('click', (event) => {
+    btn.addEventListener('click', async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (!globalThis.ettActions.run(name)) {
+      if (!(await globalThis.ettActions.run(name))) {
         toast(chrome.i18n.getMessage('tbNotFound', [label]) || label);
       }
     });
