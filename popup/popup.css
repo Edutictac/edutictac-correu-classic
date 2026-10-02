@@ -1,0 +1,149 @@
+:root {
+  --brand: #2e3191;
+  --green: #8bc53f;
+  --bg: #ffffff;
+  --panel: #f0f0f4;
+  --border: #d7d7e0;
+  --text: #15141a;
+  --muted: #5b5b66;
+  --logo-filter: none;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #8487ea;
+    --green: #9fd45a;
+    --bg: #1c1b22;
+    --panel: #2b2a33;
+    --border: #3f3e4a;
+    --text: #fbfbfe;
+    --muted: #a9a9b5;
+    --logo-filter: brightness(1.6) saturate(0.8);
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 300px;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.4 "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+header {
+  padding: 14px 16px 10px;
+  border-bottom: 3px solid var(--green);
+  background: var(--panel);
+}
+
+.logo {
+  display: block;
+  height: 30px;
+  filter: var(--logo-filter);
+}
+
+.product {
+  margin: 6px 0 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+main { padding: 6px 16px 10px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  margin: 0;
+}
+
+fieldset.row { display: block; }
+
+legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.switch input {
+  width: 34px;
+  height: 18px;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+.segmented {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.segmented label { position: relative; }
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+}
+
+.segmented span {
+  display: block;
+  padding: 6px 4px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.segmented label + label span { border-left: 1px solid var(--border); }
+
+.segmented input:checked + span {
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--brand);
+  outline-offset: -3px;
+}
+
+.tip {
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+details summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
+pre {
+  max-height: 180px;
+  overflow: auto;
+  padding: 8px;
+  background: var(--panel);
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: pre-wrap;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+footer a { color: var(--brand); }

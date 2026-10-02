@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <title>EduTicTac Correu Clàssic</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../assets/logo.png" alt="edutictac.es" class="logo">
+    <p class="product" data-i18n="extName">EduTicTac Correu Clàssic</p>
+  </header>
+
+  <main>
+    <label class="row switch">
+      <span data-i18n="popupEnabled">Aspecte clàssic actiu</span>
+      <input type="checkbox" id="enabled">
+    </label>
+
+    <fieldset class="row">
+      <legend data-i18n="popupTheme">Tema</legend>
+      <div class="segmented" role="radiogroup">
+        <label><input type="radio" name="theme" value="auto"><span data-i18n="themeAuto">Automàtic</span></label>
+        <label><input type="radio" name="theme" value="light"><span data-i18n="themeLight">Clar</span></label>
+        <label><input type="radio" name="theme" value="dark"><span data-i18n="themeDark">Fosc</span></label>
+      </div>
+    </fieldset>
+
+    <label class="row switch">
+      <span data-i18n="popupZebra">Files alternes a la llista</span>
+      <input type="checkbox" id="zebra">
+    </label>
+
+    <p class="tip" data-i18n="popupTip"></p>
+
+    <details id="diagnose">
+      <summary data-i18n="popupDiagnose">Diagnòstic</summary>
+      <pre id="diagnose-output"></pre>
+    </details>
+  </main>
+
+  <footer>
+    <a href="https://edutictac.es/" target="_blank" rel="noopener">Comunitat EduTicTac</a>
+    <span id="version"></span>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

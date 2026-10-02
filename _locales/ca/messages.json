@@ -1,0 +1,14 @@
+{
+  "extName": { "message": "EduTicTac Correu Clàssic" },
+  "extDescription": { "message": "Pell d'estil client de correu d'escriptori clàssic per a Outlook web, amb la imatge de la Comunitat EduTicTac." },
+  "popupEnabled": { "message": "Aspecte clàssic actiu" },
+  "popupTheme": { "message": "Tema" },
+  "themeAuto": { "message": "Automàtic" },
+  "themeLight": { "message": "Clar" },
+  "themeDark": { "message": "Fosc" },
+  "popupZebra": { "message": "Files alternes a la llista" },
+  "popupDiagnose": { "message": "Diagnòstic" },
+  "popupNoOutlook": { "message": "Obri Outlook web en esta pestanya per a vore el diagnòstic." },
+  "popupTip": { "message": "Consell: a Outlook, posa el panell de lectura a baix i la llista en una sola línia (Configuració › Disseny)." },
+  "brandLabel": { "message": "Correu" }
+}

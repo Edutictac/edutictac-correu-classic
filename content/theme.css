@@ -1,0 +1,404 @@
+/* ==========================================================================
+   EduTicTac Correu Clàssic — pell per a Outlook web
+   --------------------------------------------------------------------------
+   Tot queda dins de html.ett-classic (la posa content.js segons la
+   configuració), així que desactivar l'extensió torna Outlook tal com era
+   sense recarregar.
+
+   Estratègia, de més a menys robusta:
+     1. Sobreescriure els tokens de color de Fluent UI (v9) i de tema d'OWA.
+        Outlook pinta quasi tot amb estes variables: canviar-les recoloreja
+        l'app sense dependre de classes generades.
+     2. Retocs estructurals amb atributs estables (role, id, aria-*).
+   No es toquen alçades de les files de la llista: és virtualitzada i
+   canviar-les desquadra el desplaçament.
+   ========================================================================== */
+
+/* --- Paleta EduTicTac ----------------------------------------------------- */
+
+html.ett-classic {
+  --ett-brand: #2e3191;        /* indi de la X */
+  --ett-brand-hover: #25277a;
+  --ett-brand-soft: #e3e4f4;
+  --ett-green: #8bc53f;        /* bola verda */
+  --ett-link: #144ad9;
+  --ett-teal: #389986;
+
+  --ett-bg: #ffffff;           /* llista i lectura */
+  --ett-pane: #f0f0f4;         /* panell de carpetes */
+  --ett-toolbar: #f9f9fb;      /* barres d'eines */
+  --ett-rail: #e8e8ee;         /* barra d'espais (esquerra) */
+  --ett-border: #cfcfd8;
+  --ett-border-soft: #e4e4ea;
+  --ett-text: #15141a;
+  --ett-muted: #5b5b66;
+  --ett-hover: #eceef8;
+  --ett-sel: var(--ett-brand);
+  --ett-sel-text: #ffffff;
+  --ett-sel-inactive: #dcdef2;
+  --ett-zebra: #f6f6f9;
+  --ett-focus: #144ad9;
+
+  --ett-font: "Inter", "Segoe UI", system-ui, -apple-system, "Cantarell", "Ubuntu", sans-serif;
+  --ett-font-size: 13px;
+
+  color-scheme: light;
+}
+
+html.ett-classic[data-ett-theme="dark"] {
+  --ett-brand: #6d70e0;
+  --ett-brand-hover: #8487ea;
+  --ett-brand-soft: #2f3060;
+  --ett-green: #9fd45a;
+  --ett-link: #8ab4ff;
+  --ett-teal: #5cc2ad;
+
+  --ett-bg: #1c1b22;
+  --ett-pane: #2b2a33;
+  --ett-toolbar: #23222b;
+  --ett-rail: #18171d;
+  --ett-border: #3f3e4a;
+  --ett-border-soft: #33323d;
+  --ett-text: #fbfbfe;
+  --ett-muted: #a9a9b5;
+  --ett-hover: #34343f;
+  --ett-sel: #4446b8;
+  --ett-sel-text: #ffffff;
+  --ett-sel-inactive: #33345a;
+  --ett-zebra: #222129;
+  --ett-focus: #8ab4ff;
+
+  color-scheme: dark;
+}
+
+/* --- 1. Tokens de Fluent UI v9 i del tema d'OWA ----------------------------
+   FluentProvider declara els tokens en classes generades; !important en una
+   propietat personalitzada guanya a qualsevol declaració normal. */
+
+html.ett-classic,
+html.ett-classic body,
+html.ett-classic .fui-FluentProvider {
+  /* Fluent v9: fons */
+  --colorNeutralBackground1: var(--ett-bg) !important;
+  --colorNeutralBackground1Hover: var(--ett-hover) !important;
+  --colorNeutralBackground1Pressed: var(--ett-sel-inactive) !important;
+  --colorNeutralBackground1Selected: var(--ett-sel-inactive) !important;
+  --colorNeutralBackground2: var(--ett-pane) !important;
+  --colorNeutralBackground2Hover: var(--ett-hover) !important;
+  --colorNeutralBackground2Selected: var(--ett-sel-inactive) !important;
+  --colorNeutralBackground3: var(--ett-pane) !important;
+  --colorNeutralBackground3Hover: var(--ett-hover) !important;
+  --colorNeutralBackground3Selected: var(--ett-sel-inactive) !important;
+  --colorNeutralBackground4: var(--ett-toolbar) !important;
+  --colorNeutralBackground5: var(--ett-toolbar) !important;
+  --colorNeutralBackground6: var(--ett-rail) !important;
+  --colorSubtleBackgroundHover: var(--ett-hover) !important;
+  --colorSubtleBackgroundPressed: var(--ett-sel-inactive) !important;
+  --colorSubtleBackgroundSelected: var(--ett-sel-inactive) !important;
+  --colorTransparentBackgroundHover: var(--ett-hover) !important;
+
+  /* Fluent v9: text */
+  --colorNeutralForeground1: var(--ett-text) !important;
+  --colorNeutralForeground2: var(--ett-text) !important;
+  --colorNeutralForeground3: var(--ett-muted) !important;
+  --colorNeutralForeground4: var(--ett-muted) !important;
+
+  /* Fluent v9: vores */
+  --colorNeutralStroke1: var(--ett-border) !important;
+  --colorNeutralStroke2: var(--ett-border-soft) !important;
+  --colorNeutralStroke3: var(--ett-border-soft) !important;
+
+  /* Fluent v9: marca → EduTicTac */
+  --colorBrandBackground: var(--ett-brand) !important;
+  --colorBrandBackgroundHover: var(--ett-brand-hover) !important;
+  --colorBrandBackgroundPressed: var(--ett-brand-hover) !important;
+  --colorBrandBackgroundSelected: var(--ett-brand) !important;
+  --colorBrandBackground2: var(--ett-brand-soft) !important;
+  --colorCompoundBrandBackground: var(--ett-brand) !important;
+  --colorCompoundBrandForeground1: var(--ett-brand) !important;
+  --colorCompoundBrandStroke: var(--ett-brand) !important;
+  --colorBrandForeground1: var(--ett-brand) !important;
+  --colorBrandForeground2: var(--ett-brand) !important;
+  --colorBrandForegroundLink: var(--ett-link) !important;
+  --colorBrandForegroundLinkHover: var(--ett-link) !important;
+  --colorBrandStroke1: var(--ett-brand) !important;
+  --colorStrokeFocus2: var(--ett-focus) !important;
+
+  /* Fluent v9: tipografia i formes més d'escriptori */
+  --fontFamilyBase: var(--ett-font) !important;
+  --borderRadiusLarge: 4px !important;
+  --borderRadiusXLarge: 4px !important;
+  --shadow2: none !important;
+  --shadow4: none !important;
+
+  /* Tema clàssic d'OWA (Fluent v8) */
+  --themePrimary: var(--ett-brand) !important;
+  --themeDark: var(--ett-brand-hover) !important;
+  --themeDarkAlt: var(--ett-brand-hover) !important;
+  --themeDarker: var(--ett-brand-hover) !important;
+  --themeSecondary: var(--ett-brand) !important;
+  --themeTertiary: var(--ett-brand) !important;
+  --themeLight: var(--ett-sel-inactive) !important;
+  --themeLighter: var(--ett-brand-soft) !important;
+  --themeLighterAlt: var(--ett-hover) !important;
+  --neutralPrimary: var(--ett-text) !important;
+  --neutralSecondary: var(--ett-muted) !important;
+  --neutralLight: var(--ett-border-soft) !important;
+  --neutralLighter: var(--ett-pane) !important;
+  --neutralLighterAlt: var(--ett-toolbar) !important;
+  --white: var(--ett-bg) !important;
+  --bodyBackground: var(--ett-bg) !important;
+  --bodyText: var(--ett-text) !important;
+}
+
+html.ett-classic body {
+  font-family: var(--ett-font) !important;
+  background: var(--ett-bg) !important;
+  color: var(--ett-text);
+}
+
+/* Barres de desplaçament primes, com en l'escriptori */
+html.ett-classic * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ett-border) transparent;
+}
+
+/* --- 2. Barra superior → barra d'eines unificada --------------------------- */
+
+html.ett-classic #O365_NavHeader,
+html.ett-classic #o365header,
+html.ett-classic div[role="banner"] {
+  background: var(--ett-toolbar) !important;
+  color: var(--ett-text) !important;
+  border-bottom: 1px solid var(--ett-border) !important;
+  box-shadow: none !important;
+}
+
+html.ett-classic #O365_NavHeader button,
+html.ett-classic #O365_NavHeader a,
+html.ett-classic div[role="banner"] button,
+html.ett-classic div[role="banner"] a {
+  color: var(--ett-text) !important;
+}
+
+/* Cercador centrat i pla, com la barra de cerca global */
+html.ett-classic #topSearchInput,
+html.ett-classic div[role="search"],
+html.ett-classic #searchBoxId {
+  background: var(--ett-bg) !important;
+  border: 1px solid var(--ett-border) !important;
+  border-radius: 4px !important;
+  color: var(--ett-text) !important;
+}
+
+html.ett-classic div[role="search"]:focus-within,
+html.ett-classic #searchBoxId:focus-within {
+  border-color: var(--ett-focus) !important;
+  box-shadow: 0 0 0 1px var(--ett-focus) !important;
+}
+
+/* Marca EduTicTac injectada per content.js */
+html.ett-classic .ett-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 12px 0 10px;
+  margin-right: 4px;
+  border-right: 1px solid var(--ett-border-soft);
+  font: 600 14px/1 var(--ett-font);
+  color: var(--ett-text);
+  text-decoration: none;
+  white-space: nowrap;
+  flex: none;
+}
+
+html.ett-classic .ett-brand img {
+  width: 22px;
+  height: 22px;
+}
+
+html.ett-classic[data-ett-theme="dark"] .ett-brand img {
+  filter: brightness(1.9) saturate(0.7);
+}
+
+html.ett-classic .ett-brand b {
+  font-weight: 700;
+  color: var(--ett-brand);
+}
+
+html.ett-classic .ett-brand span {
+  font-weight: 500;
+  color: var(--ett-muted);
+}
+
+html:not(.ett-classic) .ett-brand {
+  display: none !important;
+}
+
+/* --- 3. Barra d'apps de l'esquerra → barra d'espais ------------------------ */
+
+html.ett-classic #LeftRail,
+html.ett-classic div[data-automation-id="leftRail"] {
+  background: var(--ett-rail) !important;
+  border-right: 1px solid var(--ett-border) !important;
+}
+
+html.ett-classic #LeftRail button[aria-pressed="true"],
+html.ett-classic #LeftRail [aria-selected="true"],
+html.ett-classic #LeftRail [aria-current="page"] {
+  background: var(--ett-sel-inactive) !important;
+  border-radius: 4px !important;
+  box-shadow: inset 3px 0 0 var(--ett-green) !important;
+}
+
+/* --- 4. Cinta d'opcions → barra d'eines plana ------------------------------ */
+
+html.ett-classic [role="tablist"][aria-label],
+html.ett-classic div[role="toolbar"] {
+  background: var(--ett-toolbar) !important;
+}
+
+html.ett-classic div[role="toolbar"] {
+  border-bottom: 1px solid var(--ett-border-soft) !important;
+}
+
+html.ett-classic div[role="toolbar"] button {
+  border-radius: 4px !important;
+}
+
+html.ett-classic div[role="toolbar"] button:hover {
+  background: var(--ett-hover) !important;
+}
+
+/* Botó «Correu nou»: el botó principal, amb el blau de marca */
+html.ett-classic button[data-automation-id="splitbuttonprimary"],
+html.ett-classic div[role="toolbar"] .fui-Button--primary,
+html.ett-classic div[role="toolbar"] .ms-Button--primary {
+  background: var(--ett-brand) !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+}
+
+/* --- 5. Panell de carpetes ------------------------------------------------- */
+
+html.ett-classic div[role="tree"],
+html.ett-classic #folderPane,
+html.ett-classic div[data-automation-id="folderPane"] {
+  background: var(--ett-pane) !important;
+  font-family: var(--ett-font) !important;
+  font-size: var(--ett-font-size) !important;
+}
+
+html.ett-classic div[role="tree"] [role="treeitem"] {
+  border-radius: 3px !important;
+  font-size: var(--ett-font-size) !important;
+}
+
+html.ett-classic div[role="tree"] [role="treeitem"]:hover {
+  background: var(--ett-hover) !important;
+}
+
+html.ett-classic div[role="tree"] [role="treeitem"][aria-selected="true"],
+html.ett-classic div[role="tree"] [role="treeitem"][aria-selected="true"] * {
+  background-color: var(--ett-sel) !important;
+  color: var(--ett-sel-text) !important;
+}
+
+/* Comptador de no llegits: xip verd EduTicTac */
+html.ett-classic div[role="tree"] [role="treeitem"] [aria-label*="unread" i],
+html.ett-classic div[role="tree"] [role="treeitem"] [aria-label*="no le" i],
+html.ett-classic div[role="tree"] [role="treeitem"] [aria-label*="no lleg" i] {
+  color: var(--ett-brand) !important;
+  font-weight: 700 !important;
+}
+
+html.ett-classic div[role="tree"] [role="treeitem"][aria-selected="true"] [aria-label] {
+  color: var(--ett-sel-text) !important;
+}
+
+/* --- 6. Llista de missatges ------------------------------------------------ */
+
+html.ett-classic div#MailList,
+html.ett-classic div#MessageList,
+html.ett-classic div[data-automation-id="messageListContainer"],
+html.ett-classic div[role="listbox"] {
+  background: var(--ett-bg) !important;
+  font-family: var(--ett-font) !important;
+}
+
+/* Capçaleres de columna (vista d'una línia) com una taula clàssica */
+html.ett-classic [role="columnheader"] {
+  background: var(--ett-toolbar) !important;
+  border-right: 1px solid var(--ett-border-soft) !important;
+  border-bottom: 1px solid var(--ett-border) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--ett-muted) !important;
+}
+
+/* Files: separador fi amb ombra interior (no altera l'alçada) */
+html.ett-classic div[role="listbox"] [role="option"] {
+  box-shadow: inset 0 -1px 0 var(--ett-border-soft) !important;
+  border-radius: 0 !important;
+  font-size: var(--ett-font-size) !important;
+}
+
+html.ett-classic div[role="listbox"] [role="option"]:hover {
+  background-color: var(--ett-hover) !important;
+}
+
+html.ett-classic.ett-zebra div[role="listbox"] [role="option"]:nth-child(even):not([aria-selected="true"]):not(:hover) {
+  background-color: var(--ett-zebra) !important;
+}
+
+/* Selecció plena, en indi de marca */
+html.ett-classic div[role="listbox"] [role="option"][aria-selected="true"] {
+  background-color: var(--ett-sel) !important;
+  box-shadow: none !important;
+}
+
+html.ett-classic div[role="listbox"] [role="option"][aria-selected="true"] *:not(svg):not(path) {
+  color: var(--ett-sel-text) !important;
+  background-color: transparent !important;
+}
+
+html.ett-classic div[role="listbox"] [role="option"][aria-selected="true"] svg {
+  fill: currentColor;
+  color: var(--ett-sel-text) !important;
+}
+
+/* --- 7. Panell de lectura -------------------------------------------------- */
+
+html.ett-classic div#ReadingPaneContainerId,
+html.ett-classic div[data-automation-id="readingPaneContainer"] {
+  background: var(--ett-bg) !important;
+  border-top: 1px solid var(--ett-border) !important;
+  border-left: 1px solid var(--ett-border) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html.ett-classic div#ReadingPaneContainerId [role="heading"] {
+  font-family: var(--ett-font) !important;
+  color: var(--ett-text) !important;
+}
+
+html.ett-classic div#ReadingPaneContainerId a[href] {
+  color: var(--ett-link) !important;
+}
+
+/* --- 8. Soroll ------------------------------------------------------------- */
+
+html.ett-classic div[data-automation-id="advertisementContainer"],
+html.ett-classic div[aria-label*="Publicidad"],
+html.ett-classic div[aria-label*="Publicitat"],
+html.ett-classic div[aria-label*="Advertisement"] {
+  display: none !important;
+}
+
+/* Focus visible de teclat, consistent */
+html.ett-classic :focus-visible {
+  outline: 2px solid var(--ett-focus) !important;
+  outline-offset: 1px !important;
+}
