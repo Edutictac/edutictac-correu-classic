@@ -167,7 +167,8 @@ html.ett-classic * {
 
 html.ett-classic #O365_NavHeader,
 html.ett-classic #o365header,
-html.ett-classic div[role="banner"] {
+html.ett-classic div[role="banner"],
+html.ett-classic .ett-header {
   background: var(--ett-toolbar) !important;
   color: var(--ett-text) !important;
   border-bottom: 1px solid var(--ett-border) !important;
@@ -177,7 +178,9 @@ html.ett-classic div[role="banner"] {
 html.ett-classic #O365_NavHeader button,
 html.ett-classic #O365_NavHeader a,
 html.ett-classic div[role="banner"] button,
-html.ett-classic div[role="banner"] a {
+html.ett-classic div[role="banner"] a,
+html.ett-classic .ett-header button,
+html.ett-classic .ett-header a {
   color: var(--ett-text) !important;
 }
 

@@ -50,8 +50,51 @@
 
   // --- Marca a la barra superior -------------------------------------------
 
+  const HEADER_SELECTOR = '#O365_NavHeader, #o365header, div[role="banner"], header[role="banner"], body header';
+
+  // La barra superior. Si Outlook no fa servir cap identificador conegut,
+  // pugem des del cercador fins al primer contenidor ample i baix que
+  // estiga dalt de tot de la finestra: eixa és la barra.
+  function findHeader() {
+    const marked = document.querySelector('.ett-header');
+    if (marked && marked.isConnected) return { el: marked, via: marked.dataset.ettVia };
+    let el = document.querySelector(HEADER_SELECTOR);
+    let via = 'selector';
+    if (!el) {
+      el = headerFromSearch();
+      via = 'cercador';
+    }
+    if (!el) return null;
+    el.classList.add('ett-header');
+    el.dataset.ettVia = via;
+    return { el, via };
+  }
+
+  function headerFromSearch() {
+    const search = document.querySelector(ANCHORS.search);
+    for (let el = search?.parentElement; el && el !== document.body; el = el.parentElement) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 4 && rect.height > 0 && rect.height <= 80 && rect.width >= window.innerWidth * 0.9) return el;
+    }
+    return null;
+  }
+
+  // Per al diagnòstic: els avantpassats del cercador amb la seua mida.
+  function searchAncestry() {
+    const out = [];
+    let el = document.querySelector(ANCHORS.search);
+    for (let depth = 0; el && el !== document.body && depth < 10; depth++, el = el.parentElement) {
+      const rect = el.getBoundingClientRect();
+      const id = el.id ? '#' + el.id : '';
+      const role = el.getAttribute('role') ? `[role=${el.getAttribute('role')}]` : '';
+      const auto = el.dataset.automationId ? `[aid=${el.dataset.automationId}]` : '';
+      out.push(`${el.tagName.toLowerCase()}${id}${role}${auto} ${Math.round(rect.width)}×${Math.round(rect.height)}@${Math.round(rect.top)}`);
+    }
+    return out;
+  }
+
   function findHeaderSlot() {
-    const header = document.querySelector('#O365_NavHeader, #o365header, div[role="banner"]');
+    const header = findHeader()?.el;
     if (!header) return null;
     // La zona esquerra on Outlook posa el seu nom d'app, si existeix
     return header.querySelector('#O365_HeaderLeftRegion') || header.firstElementChild || header;
@@ -106,6 +149,8 @@
       enabled: config.enabled,
       theme: resolveTheme(),
       brand: Boolean(document.querySelector('.ett-brand')),
+      header: findHeader()?.via || 'NO TROBADA',
+      searchAncestry: document.querySelector('.ett-brand') ? undefined : searchAncestry(),
       toolbars: {
         main: Boolean(document.querySelector('.ett-toolbar')),
         message: Boolean(document.querySelector('.ett-msgbar'))
