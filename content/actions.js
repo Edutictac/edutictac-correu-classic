@@ -68,6 +68,7 @@
 
   function labelOf(el) {
     return (el.getAttribute('aria-label') || el.getAttribute('title') || el.textContent || '')
+      .replace(/[\p{Co}\p{Cf}]/gu, '')  // glifs d'icones (ús privat) i caràcters invisibles
       .replace(/\s*\(.*?\)\s*$/, '')   // «Respon (Ctrl+R)» → «Respon»
       .replace(/\s+/g, ' ')
       .trim()
