@@ -32,7 +32,7 @@
     },
     quickFilter: {
       exact: ['filtre', 'filtra', 'filtrar', 'filtro', 'filter'],
-      prefix: ['filtre', 'filtrar', 'filtro', 'filter']
+      prefix: ['filtr', 'filter', 'ordenar y filtrar', 'ordena i filtra', 'sort']
     },
     reply: {
       ids: ['reply'],
@@ -198,6 +198,10 @@
       const label = labelOf(el).slice(0, 60) + (isUsable(el) ? '' : ' (amagat)');
       if (label || id) seen.add(label + id);
       if (seen.size >= 80) break;
+    }
+    for (const el of document.querySelectorAll(selector)) {
+      const label = labelOf(el);
+      if (!el.closest(OWN) && /filt|orden|sort/.test(label)) seen.add(`${label.slice(0, 60)} (llista)${isUsable(el) ? '' : ' (amagat)'}`);
     }
     return [...seen];
   }
