@@ -145,7 +145,9 @@
   // botons de la dreta) i hi deixa el nom «Outlook». No sabem les classes,
   // així que marquem els contenidors amb fons propi i amaguem el nom.
   // Com a molt una volta cada dos segons: Outlook muta molt.
-  const HEADER_KEEP = '.ett-toolbar, .ett-brand, div[role="search"], #searchBoxId, #topSearchInput, button, [role="button"], img, [role="img"]';
+  // Els botons de la dreta (Teams, Mi día, campana, configuració) també
+  // porten el blau de fons; només deixem intactes el cercador i les imatges.
+  const HEADER_KEEP = '.ett-toolbar, .ett-brand, div[role="search"], #searchBoxId, #topSearchInput, img, [role="img"]';
   let lastFlatten = 0;
 
   function flattenHeader() {

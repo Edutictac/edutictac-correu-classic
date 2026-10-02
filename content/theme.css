@@ -195,6 +195,15 @@ html.ett-classic .ett-header .ett-flat :is(button, [role="button"], a, i, svg):n
   color: var(--ett-text) !important;
 }
 
+html.ett-classic .ett-header .ett-flat:is(button, [role="button"]):hover {
+  background: var(--ett-hover) !important;
+}
+
+html.ett-classic .ett-header .ett-flat:is(button, [role="button"]),
+html.ett-classic .ett-header .ett-flat:is(button, [role="button"]) * {
+  color: var(--ett-text) !important;
+}
+
 html.ett-classic .ett-header .ett-gone {
   display: none !important;
 }
