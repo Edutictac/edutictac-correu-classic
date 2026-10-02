@@ -155,7 +155,8 @@
     const header = document.querySelector('.ett-header');
     if (!header) return;
     lastFlatten = performance.now();
-    for (const el of header.querySelectorAll('*')) {
+    const scope = headerRow(header);
+    for (const el of scope.querySelectorAll('*')) {
       if (el.closest('.ett-toolbar, .ett-brand')) continue;
       if (ownText(el) === 'Outlook') {
         el.classList.add('ett-gone');
@@ -169,6 +170,19 @@
     }
   }
 
+  // El lanzador d'aplicacions i la foto queden fora de la barra que trobem
+  // pel cercador, en el contenidor que l'embolica. Si eixe contenidor és
+  // també una franja dalt de tot, el marquem i el netegem sencer.
+  function headerRow(header) {
+    const parent = header.parentElement;
+    if (!parent || parent === document.body) return header;
+    const rect = parent.getBoundingClientRect();
+    const own = header.getBoundingClientRect();
+    if (rect.top > 4 || rect.height > own.height + 8) return header;
+    parent.classList.add('ett-header-row');
+    return parent;
+  }
+
   // Només el text directe de l'element, no el dels fills.
   function ownText(el) {
     return [...el.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.textContent).join('').trim();
@@ -178,8 +192,9 @@
   function headerPaint() {
     const header = document.querySelector('.ett-header');
     if (!header) return undefined;
+    const scope = headerRow(header);
     const out = [];
-    for (const el of [header, ...header.querySelectorAll('*')]) {
+    for (const el of [scope, ...scope.querySelectorAll('*')]) {
       if (el.closest('.ett-toolbar, .ett-brand')) continue;
       const style = getComputedStyle(el);
       const bg = style.backgroundImage !== 'none' ? 'img' : style.backgroundColor;
@@ -187,7 +202,7 @@
       if (!named && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) continue;
       const cls = typeof el.className === 'string' ? el.className.split(' ').filter((c) => c.startsWith('ett-')).join('.') : '';
       out.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${cls ? '.' + cls : ''} ${bg}${named ? ' «Outlook»' : ''}`);
-      if (out.length >= 15) break;
+      if (out.length >= 25) break;
     }
     return out;
   }

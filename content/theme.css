@@ -168,6 +168,7 @@ html.ett-classic * {
 html.ett-classic #O365_NavHeader,
 html.ett-classic #o365header,
 html.ett-classic div[role="banner"],
+html.ett-classic .ett-header-row,
 html.ett-classic .ett-header {
   background: var(--ett-toolbar) !important;
   color: var(--ett-text) !important;
@@ -186,21 +187,21 @@ html.ett-classic .ett-header a {
 
 /* Trossos de la barra amb fons propi (el blau de Microsoft): marcats per
    content.js. Les icones que hi havia en blanc passen al color del text. */
-html.ett-classic .ett-header .ett-flat {
+html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat {
   background: transparent !important;
   background-image: none !important;
 }
 
-html.ett-classic .ett-header .ett-flat :is(button, [role="button"], a, i, svg):not(.ett-toolbar *, .ett-brand *) {
+html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat :is(button, [role="button"], a, i, svg):not(.ett-toolbar *, .ett-brand *) {
   color: var(--ett-text) !important;
 }
 
-html.ett-classic .ett-header .ett-flat:is(button, [role="button"]):hover {
+html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat:is(button, [role="button"]):hover {
   background: var(--ett-hover) !important;
 }
 
-html.ett-classic .ett-header .ett-flat:is(button, [role="button"]),
-html.ett-classic .ett-header .ett-flat:is(button, [role="button"]) * {
+html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat:is(button, [role="button"]),
+html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat:is(button, [role="button"]) * {
   color: var(--ett-text) !important;
 }
 
