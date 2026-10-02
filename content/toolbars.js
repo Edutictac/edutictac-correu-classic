@@ -62,7 +62,10 @@
     btn.addEventListener('click', async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (!(await globalThis.ettActions.run(name))) {
+      const result = await globalThis.ettActions.run(name);
+      if (result === 'disabled') {
+        toast(chrome.i18n.getMessage('tbSelectMessage') || label);
+      } else if (!result) {
         toast(chrome.i18n.getMessage('tbNotFound', [label]) || label);
       }
     });

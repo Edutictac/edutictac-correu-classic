@@ -74,6 +74,9 @@
   "tbMessageLabel": {
     "message": "Accions del missatge"
   },
+  "tbSelectMessage": {
+    "message": "Primer selecciona un missatge de la llista."
+  },
   "tbNotFound": {
     "message": "No he trobat el botó d'Outlook per a «$1». Prova-ho des de la cinta d'Outlook."
   },

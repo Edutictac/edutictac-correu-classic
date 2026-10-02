@@ -90,10 +90,20 @@
     return isUsable(el) ? '' : ' (amagat)';
   }
 
-  function candidates(scope) {
+  function candidates(scope, test = isUsable) {
     const roots = scope ? [...document.querySelectorAll(scope)] : [document];
     const selector = 'button, [role="button"], [role="menuitem"], a[role="link"], [role="tab"]';
-    return roots.flatMap((r) => [...r.querySelectorAll(selector)]).filter(isUsable);
+    return roots.flatMap((r) => [...r.querySelectorAll(selector)]).filter(test);
+  }
+
+  // El botó existeix però Outlook el té desactivat: normalment perquè no hi
+  // ha cap missatge seleccionat. Millor avisar que provar una drecera.
+  function isDisabledMatch(def) {
+    const disabled = (el) => !el.closest(OWN) && (el.getAttribute('aria-disabled') === 'true' || el.disabled);
+    return candidates(def.scope, disabled).some((el) => {
+      const label = labelOf(el);
+      return (def.exact || []).includes(label) || (def.prefix || []).some((p) => label.startsWith(p));
+    });
   }
 
   // Botons del panell de lectura primer: Respon/Reenvia hi apareixen dues
@@ -174,6 +184,7 @@
       hit.el.click();
       return true;
     }
+    if (isDisabledMatch(def)) return 'disabled';
     if (def.key) return sendShortcut(def.key);
     if (def.url) {
       location.assign(new URL(def.url, location.origin).href);
@@ -190,7 +201,9 @@
       const hit = findButton(def);
       const tab = homeTab();
       const viaHome = tab && tab.getAttribute('aria-selected') !== 'true' ? 'pestanya Inici, després ' : '';
-      out[name] = hit ? hit.via : viaHome + (def.key ? 'drecera de teclat' : def.url ? 'URL' : 'NO TROBADA');
+      out[name] = hit ? hit.via
+        : isDisabledMatch(def) ? 'desactivat (cap missatge seleccionat?)'
+        : viaHome + (def.key ? 'drecera de teclat' : def.url ? 'URL' : 'NO TROBADA');
     }
     return out;
   }

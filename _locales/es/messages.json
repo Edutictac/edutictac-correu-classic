@@ -74,6 +74,9 @@
   "tbMessageLabel": {
     "message": "Acciones del mensaje"
   },
+  "tbSelectMessage": {
+    "message": "Primero selecciona un mensaje de la lista."
+  },
   "tbNotFound": {
     "message": "No he encontrado el botón de Outlook para «$1». Pruébalo desde la cinta de Outlook."
   },
