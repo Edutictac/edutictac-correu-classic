@@ -187,6 +187,7 @@ html.ett-classic .ett-header a {
 
 /* Trossos de la barra amb fons propi (el blau de Microsoft): marcats per
    content.js. Les icones que hi havia en blanc passen al color del text. */
+html.ett-classic .ett-corner,
 html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat {
   background: transparent !important;
   background-image: none !important;
@@ -196,6 +197,11 @@ html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat :is(button, [role="
   color: var(--ett-text) !important;
 }
 
+html.ett-classic .ett-corner :is(button, [role="button"], a, i, svg) {
+  color: var(--ett-text) !important;
+}
+
+html.ett-classic .ett-corner:is(button, [role="button"]):hover,
 html.ett-classic :is(.ett-header, .ett-header-row) .ett-flat:is(button, [role="button"]):hover {
   background: var(--ett-hover) !important;
 }

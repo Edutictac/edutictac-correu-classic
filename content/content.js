@@ -168,6 +168,48 @@
         || style.backgroundImage !== 'none';
       if (painted) el.classList.add('ett-flat');
     }
+    flattenCorners(header);
+  }
+
+  // Els cantons de la franja (el lanzador d'aplicacions a l'esquerra, la
+  // foto a la dreta) no pengen de la barra. Mirem què hi ha pintat en eixos
+  // punts i aplanem les peces baixes (no la columna lateral sencera).
+  function cornerStack(header) {
+    const y = Math.round(header.getBoundingClientRect().top + header.getBoundingClientRect().height / 2);
+    const out = [];
+    for (const x of [8, 28, window.innerWidth - 28, window.innerWidth - 8]) {
+      for (const el of document.elementsFromPoint(x, y)) {
+        if (el === document.documentElement || el === document.body) break;
+        if (el.closest('.ett-toolbar, .ett-brand')) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.height > 80) continue;
+        out.push(el);
+      }
+    }
+    return [...new Set(out)];
+  }
+
+  function flattenCorners(header) {
+    for (const el of cornerStack(header)) {
+      if (el.matches('img, [role="img"], iframe')) continue;
+      const style = getComputedStyle(el);
+      const painted = (style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent')
+        || style.backgroundImage !== 'none';
+      if (painted) el.classList.add('ett-flat', 'ett-corner');
+    }
+  }
+
+  // Per al diagnòstic: què hi ha als cantons.
+  function cornerPaint() {
+    const header = document.querySelector('.ett-header');
+    if (!header) return undefined;
+    return cornerStack(header).slice(0, 20).map((el) => {
+      const style = getComputedStyle(el);
+      const bg = style.backgroundImage !== 'none' ? 'img' : style.backgroundColor;
+      const rect = el.getBoundingClientRect();
+      const cls = typeof el.className === 'string' ? el.className.split(' ').filter((c) => c.startsWith('ett-')).join('.') : '';
+      return `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${cls ? '.' + cls : ''} ${bg} ${Math.round(rect.left)},${Math.round(rect.top)} ${Math.round(rect.width)}×${Math.round(rect.height)}`;
+    });
   }
 
   // El lanzador d'aplicacions i la foto queden fora de la barra que trobem
@@ -245,6 +287,7 @@
       header: findHeader()?.via || 'NO TROBADA',
       outlookTheme: outlookTheme() || 'desconegut',
       headerPaint: headerPaint(),
+      cornerPaint: cornerPaint(),
       searchAncestry: document.querySelector('.ett-brand') ? undefined : searchAncestry(),
       toolbars: {
         main: Boolean(document.querySelector('.ett-toolbar')),
