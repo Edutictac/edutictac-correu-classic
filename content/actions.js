@@ -16,7 +16,7 @@
     },
     write: {
       ids: ['newMessage', 'newMail', 'splitbuttonprimary'],
-      exact: ['correu nou', 'missatge nou', 'nou missatge', 'nou correu electrònic', 'correu electrònic nou', 'correo nuevo', 'nuevo correo', 'mensaje nuevo', 'nuevo mensaje', 'nuevo correo electrónico', 'correo electrónico nuevo', 'new mail', 'new message', 'new email'],
+      exact: ['nou', 'nuevo', 'new', 'correu nou', 'missatge nou', 'nou missatge', 'nou correu electrònic', 'correu electrònic nou', 'correo nuevo', 'nuevo correo', 'mensaje nuevo', 'nuevo mensaje', 'nuevo correo electrónico', 'correo electrónico nuevo', 'new mail', 'new message', 'new email'],
       prefix: ['correu nou', 'nou correu', 'missatge nou', 'correo nuevo', 'nuevo correo', 'mensaje nuevo', 'nuevo mensaje', 'new mail', 'new email', 'new message'],
       url: '/mail/deeplink/compose'
     },
