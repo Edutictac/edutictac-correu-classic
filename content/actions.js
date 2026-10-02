@@ -18,7 +18,7 @@
       ids: ['newMessage', 'newMail', 'splitbuttonprimary'],
       exact: ['correu nou', 'missatge nou', 'nou missatge', 'nou correu electrònic', 'correu electrònic nou', 'correo nuevo', 'nuevo correo', 'mensaje nuevo', 'nuevo mensaje', 'nuevo correo electrónico', 'correo electrónico nuevo', 'new mail', 'new message', 'new email'],
       prefix: ['correu nou', 'nou correu', 'missatge nou', 'correo nuevo', 'nuevo correo', 'mensaje nuevo', 'nuevo mensaje', 'new mail', 'new email', 'new message'],
-      key: { key: 'n', code: 'KeyN' }
+      url: '/mail/deeplink/compose'
     },
     addressBook: {
       scope: '#LeftRail, div[data-automation-id="leftRail"], nav',
@@ -57,7 +57,7 @@
     junk: {
       ids: ['junk', 'reportJunk'],
       exact: ['brossa', 'correu brossa', 'informa', 'notifica', 'correo no deseado', 'no deseado', 'informar', 'notificar', 'junk', 'report', 'report junk'],
-      prefix: ['informa', 'notifica', 'report']
+      prefix: ['informa ', 'notifica ', 'informar ', 'notificar ', 'report ', 'correo no deseado', 'correu brossa']
     },
     delete: {
       ids: ['delete'],
@@ -155,5 +155,19 @@
     return out;
   }
 
-  globalThis.ettActions = { run, resolveAll };
+  // Per al diagnòstic: etiquetes dels botons de les barres d'Outlook (cinta
+  // i barres d'eines, no el contingut dels missatges) per a afinar ACTIONS.
+  function inventory() {
+    const bars = 'div[role="toolbar"], #RibbonRoot, div[data-automation-id="ribbon"], div[role="region"][aria-label], [role="tablist"]';
+    const seen = new Set();
+    for (const el of candidates(bars)) {
+      const id = el.dataset.automationId ? ` [${el.dataset.automationId}]` : '';
+      const label = labelOf(el).slice(0, 60);
+      if (label || id) seen.add(label + id);
+      if (seen.size >= 80) break;
+    }
+    return [...seen];
+  }
+
+  globalThis.ettActions = { run, resolveAll, inventory };
 })();

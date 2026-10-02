@@ -156,7 +156,8 @@
         message: Boolean(document.querySelector('.ett-msgbar'))
       },
       found,
-      actions: globalThis.ettActions.resolveAll()
+      actions: globalThis.ettActions.resolveAll(),
+      buttons: globalThis.ettActions.inventory()
     };
   }
 
