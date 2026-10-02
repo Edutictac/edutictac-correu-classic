@@ -28,7 +28,21 @@
 
   function resolveTheme() {
     if (config.theme === 'light' || config.theme === 'dark') return config.theme;
-    return darkQuery.matches ? 'dark' : 'light';
+    return outlookTheme() || (darkQuery.matches ? 'dark' : 'light');
+  }
+
+  // Tema propi d'Outlook (Configuració › General › Aparença). «Automàtic»
+  // el segueix: si la pell fosca va sobre un Outlook clar, es barregen.
+  // Llegim un token de Fluent que la pell no toca: el fons invertit és clar
+  // quan Outlook és fosc.
+  function outlookTheme() {
+    const provider = document.querySelector('.fui-FluentProvider');
+    if (!provider) return null;
+    const value = getComputedStyle(provider).getPropertyValue('--colorNeutralBackgroundInverted').trim();
+    const hex = value.match(/^#([0-9a-f]{6})$/i);
+    if (!hex) return null;
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16));
+    return 0.299 * r + 0.587 * g + 0.114 * b > 128 ? 'dark' : 'light';
   }
 
   function apply() {
@@ -46,6 +60,7 @@
   function refresh() {
     ensureBrand();
     flattenHeader();
+    followOutlookTheme();
     globalThis.ettToolbars.ensure(config.enabled && config.toolbars);
   }
 
@@ -130,7 +145,7 @@
   // botons de la dreta) i hi deixa el nom «Outlook». No sabem les classes,
   // així que marquem els contenidors amb fons propi i amaguem el nom.
   // Com a molt una volta cada dos segons: Outlook muta molt.
-  const HEADER_KEEP = '.ett-toolbar, .ett-brand, div[role="search"], #searchBoxId, #topSearchInput, button, [role="button"], a, img, [role="img"]';
+  const HEADER_KEEP = '.ett-toolbar, .ett-brand, div[role="search"], #searchBoxId, #topSearchInput, button, [role="button"], img, [role="img"]';
   let lastFlatten = 0;
 
   function flattenHeader() {
@@ -138,16 +153,51 @@
     const header = document.querySelector('.ett-header');
     if (!header) return;
     lastFlatten = performance.now();
-    for (const el of header.querySelectorAll('div, span')) {
+    for (const el of header.querySelectorAll('*')) {
       if (el.closest('.ett-toolbar, .ett-brand')) continue;
-      if (el.childElementCount === 0 && el.textContent.trim() === 'Outlook') {
+      if (ownText(el) === 'Outlook') {
         el.classList.add('ett-gone');
         continue;
       }
       if (el.classList.contains('ett-flat') || el.closest(HEADER_KEEP)) continue;
-      const bg = getComputedStyle(el).backgroundColor;
-      if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') el.classList.add('ett-flat');
+      const style = getComputedStyle(el);
+      const painted = (style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent')
+        || style.backgroundImage !== 'none';
+      if (painted) el.classList.add('ett-flat');
     }
+  }
+
+  // Només el text directe de l'element, no el dels fills.
+  function ownText(el) {
+    return [...el.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.textContent).join('').trim();
+  }
+
+  // Per al diagnòstic: què pinta fons dins de la barra i on és el nom.
+  function headerPaint() {
+    const header = document.querySelector('.ett-header');
+    if (!header) return undefined;
+    const out = [];
+    for (const el of [header, ...header.querySelectorAll('*')]) {
+      if (el.closest('.ett-toolbar, .ett-brand')) continue;
+      const style = getComputedStyle(el);
+      const bg = style.backgroundImage !== 'none' ? 'img' : style.backgroundColor;
+      const named = ownText(el) === 'Outlook';
+      if (!named && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) continue;
+      const cls = typeof el.className === 'string' ? el.className.split(' ').filter((c) => c.startsWith('ett-')).join('.') : '';
+      out.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${cls ? '.' + cls : ''} ${bg}${named ? ' «Outlook»' : ''}`);
+      if (out.length >= 15) break;
+    }
+    return out;
+  }
+
+  // Si el tema és automàtic i Outlook canvia de tema, la pell el segueix.
+  let lastThemeCheck = 0;
+
+  function followOutlookTheme() {
+    if (!config.enabled || config.theme !== 'auto' || performance.now() - lastThemeCheck < 2000) return;
+    lastThemeCheck = performance.now();
+    const theme = resolveTheme();
+    if (root.getAttribute('data-ett-theme') !== theme) root.setAttribute('data-ett-theme', theme);
   }
 
   // Outlook carrega la barra tard i de vegades la redibuixa: tornem a posar
@@ -176,6 +226,8 @@
       config,
       brand: Boolean(document.querySelector('.ett-brand')),
       header: findHeader()?.via || 'NO TROBADA',
+      outlookTheme: outlookTheme() || 'desconegut',
+      headerPaint: headerPaint(),
       searchAncestry: document.querySelector('.ett-brand') ? undefined : searchAncestry(),
       toolbars: {
         main: Boolean(document.querySelector('.ett-toolbar')),

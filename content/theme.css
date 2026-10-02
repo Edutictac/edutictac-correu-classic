@@ -188,6 +188,7 @@ html.ett-classic .ett-header a {
    content.js. Les icones que hi havia en blanc passen al color del text. */
 html.ett-classic .ett-header .ett-flat {
   background: transparent !important;
+  background-image: none !important;
 }
 
 html.ett-classic .ett-header .ett-flat :is(button, [role="button"], a, i, svg):not(.ett-toolbar *, .ett-brand *) {
