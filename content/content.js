@@ -45,6 +45,7 @@
 
   function refresh() {
     ensureBrand();
+    flattenHeader();
     globalThis.ettToolbars.ensure(config.enabled && config.toolbars);
   }
 
@@ -123,6 +124,30 @@
 
     brand.append(img, name, label);
     slot.prepend(brand);
+  }
+
+  // La barra d'Outlook pinta trossos amb el blau de Microsoft (la zona dels
+  // botons de la dreta) i hi deixa el nom «Outlook». No sabem les classes,
+  // així que marquem els contenidors amb fons propi i amaguem el nom.
+  // Com a molt una volta cada dos segons: Outlook muta molt.
+  const HEADER_KEEP = '.ett-toolbar, .ett-brand, div[role="search"], #searchBoxId, #topSearchInput, button, [role="button"], a, img, [role="img"]';
+  let lastFlatten = 0;
+
+  function flattenHeader() {
+    if (!config.enabled || performance.now() - lastFlatten < 2000) return;
+    const header = document.querySelector('.ett-header');
+    if (!header) return;
+    lastFlatten = performance.now();
+    for (const el of header.querySelectorAll('div, span')) {
+      if (el.closest('.ett-toolbar, .ett-brand')) continue;
+      if (el.childElementCount === 0 && el.textContent.trim() === 'Outlook') {
+        el.classList.add('ett-gone');
+        continue;
+      }
+      if (el.classList.contains('ett-flat') || el.closest(HEADER_KEEP)) continue;
+      const bg = getComputedStyle(el).backgroundColor;
+      if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') el.classList.add('ett-flat');
+    }
   }
 
   // Outlook carrega la barra tard i de vegades la redibuixa: tornem a posar

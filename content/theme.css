@@ -184,6 +184,20 @@ html.ett-classic .ett-header a {
   color: var(--ett-text) !important;
 }
 
+/* Trossos de la barra amb fons propi (el blau de Microsoft): marcats per
+   content.js. Les icones que hi havia en blanc passen al color del text. */
+html.ett-classic .ett-header .ett-flat {
+  background: transparent !important;
+}
+
+html.ett-classic .ett-header .ett-flat :is(button, [role="button"], a, i, svg):not(.ett-toolbar *, .ett-brand *) {
+  color: var(--ett-text) !important;
+}
+
+html.ett-classic .ett-header .ett-gone {
+  display: none !important;
+}
+
 /* Cercador centrat i pla, com la barra de cerca global */
 html.ett-classic #topSearchInput,
 html.ett-classic div[role="search"],
@@ -480,6 +494,9 @@ html.ett-classic .ett-toolbar .ett-btn-write:hover {
 /* Barra del missatge: a la dreta, botons amb vora, com a la capçalera
    d'un missatge en un client d'escriptori */
 html.ett-classic .ett-msgbar {
+  flex: 0 0 100%;
+  width: 100%;
+  box-sizing: border-box;
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 4px;

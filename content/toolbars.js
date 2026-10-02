@@ -115,7 +115,9 @@
     }
     if (existing && pane.contains(existing)) return;
     existing?.remove();
-    pane.prepend(bar('ett-msgbar', MESSAGE, 'tbMessageLabel'));
+    // Just damunt de l'assumpte: al principi del panell quedava retallada
+    // davall de la llista.
+    pane.querySelector('[role="heading"]').before(bar('ett-msgbar', MESSAGE, 'tbMessageLabel'));
   }
 
   function ensure(enabled) {
