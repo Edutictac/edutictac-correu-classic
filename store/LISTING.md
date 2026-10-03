@@ -63,3 +63,36 @@ Proyecto de la Comunitat EduTicTac, software libre. No está afiliada ni avalada
 
 - **Visibilitat:** Pública, o «No llistada» si només es vol repartir l'enllaç als centres.
 - **Regions:** totes.
+
+---
+
+# Fitxa per a Firefox (addons.mozilla.org)
+
+Panell: https://addons.mozilla.org/developers/addon/submit/distribution
+Paquet: el mateix zip (`dist/edutictac-correu-classic-vX.Y.Z.zip`, des de v0.3.7). El manifest ja porta l'id `correu-classic@edutictac.es` i `data_collection_permissions: none`.
+
+- **Distribució:** «En aquest lloc» (llistada a AMO).
+- **Codi font:** «No». El codi no està minificat ni transpilat; no cal pujar-lo.
+- **Categoria (Firefox):** Aparença. Secundària: Eines socials i de comunicació.
+- **Llicència:** MIT.
+- **Política de privadesa:** sí, enganxar el text de `PRIVACY.md`.
+- **Pàgina d'inici:** https://edutictac.es/
+- **URL d'assistència:** https://github.com/Edutictac/edutictac-correu-classic/issues
+- **Captures:** les mateixes de Chrome (`store/screenshot-*.png`).
+- **Etiquetes:** outlook, email, theme, education
+
+### Resum (català, ≤ 250 caràcters)
+
+Dona a Outlook web l'aspecte d'un client de correu d'escriptori clàssic: barra d'eines unificada, accions del missatge sempre a la vista, colors sobris i tema clar o fosc. No llig ni envia el teu correu.
+
+### Resumen (castellano, ≤ 250 caracteres)
+
+Da a Outlook web el aspecto de un cliente de correo de escritorio clásico: barra de herramientas unificada, acciones del mensaje siempre a la vista, colores sobrios y tema claro u oscuro. No lee ni envía tu correo.
+
+### Descripció
+
+La mateixa que per a Chrome (dalt). En AMO es pot usar un HTML bàsic; les vinyetes «•» es poden deixar tal qual.
+
+### Notes per al revisor (en anglés)
+
+Pure CSS/JS skin for Outlook on the web. No build step, no minification, no remote code, no network requests. Content scripts only run on the four Outlook web hosts listed in the manifest. The only permission is `storage`, used to keep the user's preferences (enabled, theme, alternate rows, toolbars, hide ribbon). Testing requires a Microsoft 365 or Outlook.com account; the popup's «Diagnòstic» button shows which Outlook elements the skin found.
