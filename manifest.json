@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "Correu Clàssic",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "__MSG_extDescription__",
   "default_locale": "ca",
   "icons": {
@@ -49,7 +49,13 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "correu-classic@edutictac.es",
-      "strict_min_version": "128.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
     }
   }
 }
